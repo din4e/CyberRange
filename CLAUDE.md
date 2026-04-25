@@ -36,6 +36,13 @@ CyberRange/
 │       ├── docker-compose.yml   # 4 服务 + 3 网络
 │       ├── .env                 # FLAGS + COMPOSE_PROJECT_NAME
 │       └── cfs-manage.ps1       # 旧版 PowerShell 管理脚本
+├── webshell-test/               # WebShell 测试靶场 (Docker + Vagrant)
+│   ├── docker-compose.yml       # PHP Apache(:20000) + Tomcat(:20001)
+│   ├── Vagrantfile              # Linux(Apache+Tomcat) + Windows(IIS) 虚拟机
+│   ├── windows-setup.ps1        # Windows IIS 自动配置脚本
+│   ├── html/                    # PHP 站点根目录
+│   ├── tomcat-webapps/ROOT/     # Tomcat 站点根目录
+│   └── webshell/                # 测试用 webshell 文件 (冰蝎 ASP/ASPX/JSP/JSPX)
 └── pyproject.toml
 ```
 
@@ -97,7 +104,15 @@ python -m cyberrange list
 | `get_stats` | range_key?, instance_id? | 是 | 启动次数、运行时间统计 |
 | `record_interaction` | range_key, instance_id, action, details | 否 | 记录 AI Agent 交互事件 |
 
+### webshell-test 靶场
+- 位于项目根目录 (非 `<category>/<name>` 格式)，CLI 发现需特殊处理
+- Docker: PHP Apache (`:20000`) + Tomcat (`:20001`)，端口固定不经过端口池分配
+- Vagrant: Linux VM (Ubuntu 20.04, Apache+PHP `:20020`, Tomcat `:20021`) + Windows VM (IIS `:20022`, ASP/ASPX)
+- 支持 PHP/JSP/JSPX/ASP/ASPX 多语言 webshell 测试 (含冰蝎 3.0 默认马)
+- `webshell/` 目录同时挂载到 Apache 和 Tomcat 容器
+
 ## 已知问题
 
 - PowerShell 脚本 `cfs-manage.ps1` 需 UTF-8 BOM，否则 PowerShell 5.1 按 GBK 解析中文导致语法错误
 - `docker compose config` 输出包含 `name:` (项目名) 和网络 `name:` (带项目前缀)，生成 compose 文件时必须移除
+- `webshell-test` 位于项目根目录，不在 `<category>/<name>` 子目录结构下，可能不被 `discovery.py` 自动发现
