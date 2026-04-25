@@ -1,0 +1,17 @@
+.env
+
+.omc/
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.venv/
+venv/
+
+# Cyberrange runtime data
+cyberrange/data/
