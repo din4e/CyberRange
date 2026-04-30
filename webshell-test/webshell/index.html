@@ -3,300 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebShell 目录</title>
+    <title>WebShell 测试目录</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
             padding: 40px 20px;
+            line-height: 1.6;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px;
+        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; }
+        h1 { font-size: 1.5em; margin-bottom: 5px; }
+        .subtitle { color: #666; margin-bottom: 20px; }
+
+        .env-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+        .env-tab {
+            padding: 6px 14px; border: 1px solid #ddd; background: #fff;
+            color: #333; text-decoration: none; font-size: 0.9em;
         }
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            text-align: center;
-            font-size: 2.5em;
+        .env-tab.active { background: #333; color: #fff; border-color: #333; }
+
+        .env-badge {
+            background: #e8f5e9; border-left: 3px solid #4caf50;
+            padding: 8px 15px; margin-bottom: 15px; font-size: 0.9em;
         }
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-        }
-        .file-list {
-            list-style: none;
-        }
-        .file-item {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 15px 20px;
-            margin: 10px 0;
-            border-radius: 5px;
-            transition: all 0.3s;
-            position: relative;
-        }
-        .file-item:hover {
-            background: #e9ecef;
-            transform: translateX(5px);
-        }
-        .file-item a {
-            text-decoration: none;
-            color: #667eea;
-            font-weight: 500;
-            font-size: 1.1em;
-        }
-        .file-item .description {
-            color: #666;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-        .file-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .copy-buttons {
-            display: flex;
-            gap: 5px;
-        }
-        .copy-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: all 0.3s;
-        }
-        .copy-btn:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-        }
-        .copy-btn:active {
-            transform: translateY(0);
-        }
-        .info-box {
-            background: #e7f3ff;
-            border-left: 4px solid #2196F3;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-        }
-        .info-box h3 {
-            color: #1976D2;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #cce7ff;
-        }
-        .info-item:last-child {
-            border-bottom: none;
-        }
-        .info-label {
-            color: #1976D2;
-            font-weight: 500;
-        }
-        .info-value {
-            color: #333;
-            font-family: 'Courier New', monospace;
-            background: white;
-            padding: 4px 10px;
-            border-radius: 4px;
-        }
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #28a745;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s;
-            z-index: 1000;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+
         .warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
+            background: #fff8e1; border-left: 3px solid #ffc107;
+            padding: 12px 15px; margin: 15px 0; font-size: 0.9em;
         }
-        .warning h3 {
-            color: #856404;
-            margin-bottom: 10px;
+        .warning h3 { font-size: 1em; margin-bottom: 4px; }
+
+        .info-box { background: #f5f5f5; padding: 12px 15px; margin: 15px 0; }
+        .info-box h3 { font-size: 1em; margin-bottom: 8px; }
+        .info-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 6px 0; border-bottom: 1px solid #e0e0e0;
         }
-        .warning p {
-            color: #856404;
+        .info-item:last-child { border-bottom: none; }
+        .info-label { font-weight: 500; }
+        .info-value { font-family: monospace; background: #fff; padding: 2px 8px; }
+
+        .upload-area {
+            border: 2px dashed #ddd; padding: 20px; text-align: center;
+            margin: 15px 0; cursor: pointer; transition: border-color 0.2s;
         }
+        .upload-area:hover, .upload-area.dragover { border-color: #333; }
+        .upload-area p { color: #666; font-size: 0.9em; }
+        .upload-area input { display: none; }
+
+        .file-list { list-style: none; margin-top: 15px; }
+        .file-item { border: 1px solid #e0e0e0; padding: 15px; margin: 10px 0; }
+        .file-header {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .file-name { font-weight: 600; font-size: 1.05em; }
+        .file-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+        .btn {
+            border: 1px solid #333; padding: 5px 12px; cursor: pointer;
+            font-size: 0.85em; text-decoration: none; background: #fff; color: #333;
+        }
+        .btn-open { background: #333; color: #fff; }
+        .btn-danger { color: #dc3545; border-color: #dc3545; }
+        .btn-danger:hover { background: #dc3545; color: #fff; }
+        .file-desc { color: #555; font-size: 0.9em; margin-top: 6px; }
+        .file-meta { color: #888; font-size: 0.8em; margin-top: 2px; }
+
+        .empty-msg { text-align: center; padding: 30px; color: #888; font-size: 0.9em; }
+
+        .back-link { margin-top: 25px; text-align: center; }
+        .back-link a { color: #333; }
+
+        .toast {
+            position: fixed; bottom: 20px; right: 20px; background: #333;
+            color: #fff; padding: 12px 20px; opacity: 0; transition: opacity 0.2s; z-index: 1000;
+        }
+        .toast.show { opacity: 1; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📁 WebShell 目录</h1>
-        <p class="subtitle">测试用 WebShell 文件列表</p>
-        
+        <h1>WebShell 测试目录</h1>
+        <p class="subtitle">多环境 WebShell 文件管理</p>
+
+        <div class="env-tabs">
+            <a href="http://localhost:20000/webshell/" class="env-tab" data-port="20000">PHP Apache (:20000)</a>
+            <a href="http://localhost:20001/webshell/" class="env-tab" data-port="20001">Tomcat (:20001)</a>
+        </div>
+        <div id="env-badge" class="env-badge">
+            当前环境：<strong id="env-name">检测中...</strong>
+        </div>
+
         <div class="warning">
-            <h3>⚠️ 警告</h3>
-            <p>这些文件仅供测试使用。请勿在生产环境中使用。</p>
+            <h3>警告</h3>
+            <p>这些文件仅供安全测试与学术研究使用，请勿在生产环境或未经授权的系统上使用。</p>
         </div>
 
         <div class="info-box">
-            <h3>🔑 连接信息</h3>
+            <h3>连接信息 (冰蝎 3.0)</h3>
             <div class="info-item">
-                <span class="info-label">默认密码：</span>
-                <div style="display: flex; gap: 10px; align-items: center;">
+                <span class="info-label">默认密码</span>
+                <div style="display: flex; gap: 8px; align-items: center;">
                     <span class="info-value">rebeyond</span>
-                    <button class="copy-btn" onclick="copyText('rebeyond', '密码')">📋 复制</button>
+                    <button class="btn" onclick="copyText('rebeyond', '密码')">复制</button>
                 </div>
             </div>
             <div class="info-item">
-                <span class="info-label">PHP 环境：</span>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <span class="info-value">http://localhost:20000/webshell/</span>
-                    <button class="copy-btn" onclick="copyText('http://localhost:20000/webshell/', 'URL')">📋 复制</button>
+                <span class="info-label">密钥 (AES Key)</span>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <span class="info-value">e45e329feb5d925b</span>
+                    <button class="btn" onclick="copyText('e45e329feb5d925b', '密钥')">复制</button>
                 </div>
             </div>
             <div class="info-item">
-                <span class="info-label">Tomcat 环境：</span>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <span class="info-value">http://localhost:20001/webshell/</span>
-                    <button class="copy-btn" onclick="copyText('http://localhost:20001/webshell/', 'URL')">📋 复制</button>
+                <span class="info-label">加密方式</span>
+                <span class="info-value">AES-128</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">混淆模式</span>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <span class="info-value">默认 (无额外混淆)</span>
                 </div>
+            </div>
+            <div class="info-item">
+                <span class="info-label">编码模式</span>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <span class="info-value">UTF-8</span>
+                </div>
+            </div>
+            <div style="color: #888; font-size: 0.8em; margin-top: 8px;">
+                密钥 = MD5(密码) 取前 16 位 | ASP/ASPX 环境编码建议使用 GBK
             </div>
         </div>
 
-        <ul class="file-list">
-            <li class="file-item">
-                <div class="file-header">
-                    <a href="behinder_3.0_default.php">behinder_3.0_default.php</a>
-                    <div class="copy-buttons">
-                        <button class="copy-btn" onclick="copyText('behinder_3.0_default.php', '文件名')">📋 文件名</button>
-                        <button class="copy-btn" onclick="copyText(getFullUrl('behinder_3.0_default.php'), 'URL')">🔗 URL</button>
-                    </div>
-                </div>
-                <div class="description">PHP WebShell - Behinder 3.0 默认密钥 (rebeyond)</div>
-            </li>
-            <li class="file-item">
-                <div class="file-header">
-                    <a href="behinder_3.0_default.jsp">behinder_3.0_default.jsp</a>
-                    <div class="copy-buttons">
-                        <button class="copy-btn" onclick="copyText('behinder_3.0_default.jsp', '文件名')">📋 文件名</button>
-                        <button class="copy-btn" onclick="copyText(getFullUrl('behinder_3.0_default.jsp'), 'URL')">🔗 URL</button>
-                    </div>
-                </div>
-                <div class="description">JSP WebShell - Behinder 3.0 默认密钥</div>
-            </li>
-            <li class="file-item">
-                <div class="file-header">
-                    <a href="behinder_3.0_default.jspx">behinder_3.0_default.jspx</a>
-                    <div class="copy-buttons">
-                        <button class="copy-btn" onclick="copyText('behinder_3.0_default.jspx', '文件名')">📋 文件名</button>
-                        <button class="copy-btn" onclick="copyText(getFullUrl('behinder_3.0_default.jspx'), 'URL')">🔗 URL</button>
-                    </div>
-                </div>
-                <div class="description">JSPX WebShell - Behinder 3.0 默认密钥</div>
-            </li>
-            <li class="file-item">
-                <div class="file-header">
-                    <a href="behinder_3.0_default_java9.jsp">behinder_3.0_default_java9.jsp</a>
-                    <div class="copy-buttons">
-                        <button class="copy-btn" onclick="copyText('behinder_3.0_default_java9.jsp', '文件名')">📋 文件名</button>
-                        <button class="copy-btn" onclick="copyText(getFullUrl('behinder_3.0_default_java9.jsp'), 'URL')">🔗 URL</button>
-                    </div>
-                </div>
-                <div class="description">JSP WebShell - Behinder 3.0 (Java 9+)</div>
-            </li>
-            <li class="file-item">
-                <div class="file-header">
-                    <a href="behinder_3.0_default.asp">behinder_3.0_default.asp</a>
-                    <div class="copy-buttons">
-                        <button class="copy-btn" onclick="copyText('behinder_3.0_default.asp', '文件名')">📋 文件名</button>
-                        <button class="copy-btn" onclick="copyText(getFullUrl('behinder_3.0_default.asp'), 'URL')">🔗 URL</button>
-                    </div>
-                </div>
-                <div class="description">ASP WebShell - Behinder 3.0 默认密钥</div>
-            </li>
-            <li class="file-item">
-                <div class="file-header">
-                    <a href="behinder_3.0_default.aspx">behinder_3.0_default.aspx</a>
-                    <div class="copy-buttons">
-                        <button class="copy-btn" onclick="copyText('behinder_3.0_default.aspx', '文件名')">📋 文件名</button>
-                        <button class="copy-btn" onclick="copyText(getFullUrl('behinder_3.0_default.aspx'), 'URL')">🔗 URL</button>
-                    </div>
-                </div>
-                <div class="description">ASPX WebShell - Behinder 3.0 默认密钥</div>
-            </li>
-        </ul>
+        <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+            <p>拖拽文件到此处或点击上传</p>
+            <p style="color: #aaa; font-size: 0.8em; margin-top: 4px;">支持 PHP / JSP / JSPX / ASP / ASPX</p>
+            <input type="file" id="file-input" multiple accept=".php,.jsp,.jspx,.asp,.aspx" onchange="handleFiles(this.files)">
+        </div>
 
-        <div style="margin-top: 30px; text-align: center;">
-            <a href="/" style="color: #667eea; text-decoration: none; font-size: 1.1em;">← 返回首页</a>
+        <div id="file-list"><p class="empty-msg">加载中...</p></div>
+
+        <div class="back-link">
+            <a href="/">返回首页</a>
         </div>
     </div>
 
     <div id="toast" class="toast"></div>
 
     <script>
-        function copyText(text, label) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast(`✅ ${label}已复制: ${text}`);
-            }).catch(err => {
-                // 降级方案：使用传统方式复制
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                textarea.style.position = 'fixed';
-                textarea.style.opacity = '0';
-                document.body.appendChild(textarea);
-                textarea.select();
-                try {
-                    document.execCommand('copy');
-                    showToast(`✅ ${label}已复制: ${text}`);
-                } catch (e) {
-                    showToast('❌ 复制失败');
+        const ENV_MAP = {
+            '20000': { name: 'PHP Apache (:20000)', api: 'api.php', exts: ['php'] },
+            '20001': { name: 'Tomcat (:20001)', api: 'api.jsp', exts: ['jsp', 'jspx'] }
+        };
+        const TYPE_LABELS = {
+            php: 'PHP WebShell', jsp: 'JSP WebShell', jspx: 'JSPX WebShell',
+            asp: 'ASP WebShell', aspx: 'ASPX WebShell'
+        };
+        const ENV_FOR_EXT = {
+            php: 'PHP Apache (:20000)', jsp: 'Tomcat (:20001)', jspx: 'Tomcat (:20001)',
+            asp: 'IIS / Windows (:20022)', aspx: 'IIS / Windows (:20022)'
+        };
+
+        const port = window.location.port;
+        const env = ENV_MAP[port] || null;
+        const apiUrl = env ? env.api : null;
+
+        (function init() {
+            const tabs = document.querySelectorAll('.env-tab');
+            const envName = document.getElementById('env-name');
+            let detected = false;
+
+            tabs.forEach(tab => {
+                if (tab.dataset.port === port) {
+                    tab.classList.add('active');
+                    detected = true;
+                    envName.textContent = tab.textContent;
+                } else {
+                    tab.classList.remove('active');
                 }
-                document.body.removeChild(textarea);
+            });
+
+            if (!detected) {
+                envName.textContent = '未知环境 (端口 ' + (port || '80') + ')';
+                document.getElementById('env-badge').style.borderLeftColor = '#ff9800';
+                document.getElementById('env-badge').style.background = '#fff8e1';
+                tabs[0].classList.add('active');
+            }
+
+            loadFiles();
+            setupDragDrop();
+        })();
+
+        async function loadFiles() {
+            const el = document.getElementById('file-list');
+            if (!apiUrl) {
+                el.innerHTML = '<p class="empty-msg">当前环境不支持文件列表 API</p>';
+                return;
+            }
+            try {
+                const res = await fetch(apiUrl + '?action=list');
+                const data = await res.json();
+                renderFiles(data.files || []);
+            } catch (e) {
+                el.innerHTML = '<p class="empty-msg">加载文件列表失败</p>';
+            }
+        }
+
+        function renderFiles(files) {
+            const el = document.getElementById('file-list');
+            const exts = env ? env.exts : Object.keys(TYPE_LABELS);
+
+            const filtered = files.filter(f => {
+                const ext = f.name.split('.').pop().toLowerCase();
+                return exts.includes(ext);
+            });
+
+            if (filtered.length === 0) {
+                el.innerHTML = '<p class="empty-msg">当前环境无匹配的 WebShell 文件</p>';
+                return;
+            }
+
+            el.innerHTML = '<ul class="file-list">' + filtered.map(f => fileCard(f)).join('') + '</ul>';
+        }
+
+        function fileCard(f) {
+            const ext = f.name.split('.').pop().toLowerCase();
+            const typeLabel = TYPE_LABELS[ext] || ext.toUpperCase();
+            const envLabel = ENV_FOR_EXT[ext] || '';
+            const isBehinder = f.name.toLowerCase().includes('behinder');
+            const desc = isBehinder
+                ? typeLabel + ' - Behinder 3.0 默认密钥 (rebeyond)'
+                : typeLabel;
+
+            return '<li class="file-item">' +
+                '<div class="file-header">' +
+                    '<span class="file-name">' + esc(f.name) + '</span>' +
+                    '<div class="file-actions">' +
+                        '<a class="btn btn-open" href="' + esc(f.name) + '" target="_blank">打开</a>' +
+                        '<button class="btn" onclick="copyText(\'' + esc(f.name) + '\', \'文件名\')">复制文件名</button>' +
+                        '<button class="btn" onclick="copyText(getFullUrl(\'' + esc(f.name) + '\'), \'URL\')">复制 URL</button>' +
+                        '<button class="btn btn-danger" onclick="deleteFile(\'' + esc(f.name) + '\')">删除</button>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="file-desc">' + desc + '</div>' +
+                '<div class="file-meta">适用：' + envLabel + ' | ' + formatSize(f.size) + ' | ' + f.modified + '</div>' +
+            '</li>';
+        }
+
+        function esc(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        async function handleFiles(fileList) {
+            if (!apiUrl) { showToast('当前环境不支持上传'); return; }
+            for (const file of fileList) {
+                await uploadFile(file);
+            }
+            document.getElementById('file-input').value = '';
+            loadFiles();
+        }
+
+        function uploadFile(file) {
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const bytes = new Uint8Array(e.target.result);
+                    let binary = '';
+                    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+                    const base64 = btoa(binary);
+                    try {
+                        const res = await fetch(apiUrl + '?action=upload', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name: file.name, content: base64 })
+                        });
+                        const data = await res.json();
+                        showToast(data.success ? '上传成功: ' + data.name : '上传失败: ' + (data.error || '未知错误'));
+                    } catch (e) {
+                        showToast('上传失败');
+                    }
+                    resolve();
+                };
+                reader.readAsArrayBuffer(file);
             });
         }
 
-        function getFullUrl(filename) {
-            return window.location.origin + window.location.pathname + filename;
+        async function deleteFile(name) {
+            if (!confirm('确定删除 ' + name + '？')) return;
+            try {
+                const res = await fetch(apiUrl + '?action=delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name })
+                });
+                const data = await res.json();
+                if (data.success) { showToast('已删除: ' + name); loadFiles(); }
+                else showToast('删除失败: ' + (data.error || '未知错误'));
+            } catch (e) {
+                showToast('删除失败');
+            }
         }
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
+        function setupDragDrop() {
+            const area = document.getElementById('upload-area');
+            area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('dragover'); });
+            area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+            area.addEventListener('drop', e => {
+                e.preventDefault();
+                area.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+        }
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        function getFullUrl(filename) {
+            const base = window.location.pathname.replace(/[^/]*$/, '');
+            return window.location.origin + base + filename;
+        }
+
+        function copyText(text, label) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(label + '已复制: ' + text);
+            }).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.select();
+                try { document.execCommand('copy'); showToast(label + '已复制: ' + text); }
+                catch (e) { showToast('复制失败'); }
+                document.body.removeChild(ta);
+            });
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
         }
     </script>
 </body>
 </html>
-
