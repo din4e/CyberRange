@@ -1,0 +1,15 @@
+# IIS ASP/ASPX 环境 - 需要 Docker Desktop 切换到 Windows 容器模式
+# 使用方法:
+#   1. 右键 Docker 托盘图标 -> "Switch to Windows containers..."
+#   2. docker compose -f docker-compose.iis.yml up --build
+services:
+  iis:
+    build:
+      context: .
+      dockerfile: iis/Dockerfile
+    container_name: cyberrange-iis
+    ports:
+      - "20004:80"
+    volumes:
+      - ./webshell:C:/inetpub/wwwroot/webshell
+    restart: unless-stopped

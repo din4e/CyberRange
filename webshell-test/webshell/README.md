@@ -1,143 +1,121 @@
 # WebShell 测试文件说明
 
-本目录包含用于测试的各类 WebShell 样本。
+本目录包含用于安全测试的各类 WebShell 样本，支持冰蝎和哥斯拉两大主流工具。
 
 ## 文件列表
 
 ### Behinder（冰蝎）WebShell
 
 #### JSP 版本
-- **behinder_3.0_default.jsp** - 标准版本（已更新兼容Java 9+）
+- **behinder_3.0_default.jsp** - 标准版本（兼容 Java 8-21）
   - 使用 `java.util.Base64` 解码
-  - 兼容 Java 8-21
-  - 默认密码：rebeyond
-  - 密钥：e45e329feb5d925b（密码MD5前16位）
+  - 默认密码：`rebeyond`
+  - 密钥：`e45e329feb5d925b`（密码 MD5 前 16 位）
 
-- **behinder_3.0_default_java9.jsp** - Java 9+ 优化版本
-  - 与上面功能相同
-  - 保留作为备用
+- **behinder_3.0_default_java9.jsp** - Java 9+ 版本（与标准版功能相同，备用）
 
-- **behinder_3.0_default.jspx** - JSPX 格式版本
-  - XML格式的JSP
-  - 功能与JSP版本相同
+- **behinder_3.0_default.jspx** - JSPX 格式版本（XML 格式 JSP）
 
 #### PHP 版本
-- **behinder_3.0_default.php** - PHP WebShell
-  - 支持 PHP 5.4+
-  - 默认密码：rebeyond
+- **behinder_3.0_default.php** - PHP WebShell（PHP 5.4+）
 
 #### ASP/ASPX 版本
-- **behinder_3.0_default.asp** - ASP WebShell
-  - 用于 Windows IIS + ASP 环境
-  - 默认密码：rebeyond
+- **behinder_3.0_default.asp** - Classic ASP WebShell（Windows IIS）
+- **behinder_3.0_default.aspx** - ASP.NET WebShell（Windows IIS）
 
-- **behinder_3.0_default.aspx** - ASP.NET WebShell
-  - 用于 Windows IIS + ASP.NET 环境
-  - 默认密码：rebeyond
+> **冰蝎 4.0 兼容说明：** 冰蝎 4.0 的服务端 payload 与 3.0 相同，上述文件均可直接用于冰蝎 4.0 客户端连接。4.0 的主要变化在客户端（新增自定义请求头、分块传输等功能）。
+
+### Godzilla（哥斯拉）WebShell
+
+- **godzilla.php** - PHP WebShell
+  - 连接密码：`pass`
+  - 密钥：`pass`（与密码相同，XOR 加密）
+
+- **godzilla.jsp** - JSP WebShell
+  - 连接密码：`pass`
+  - 密钥：`3c6e0b8a9c15224a`（MD5(pass)[0:16]）
+  - 加密方式：AES-128 + Base64
+
+- **godzilla.aspx** - ASP.NET WebShell
+  - 连接密码：`pass`
+  - 密钥：`3c6e0b8a9c15224a`
+  - 加密方式：AES-128
 
 ### 其他文件
+- **api.php** / **api.jsp** - 文件管理 API（上传/列表/删除）
 - **index.html** - 目录索引页面
 
-## 使用说明
+## 连接信息汇总
 
-### 1. 访问地址
+| 工具 | 语言 | 文件 | 密码 | 密钥 | 加密 |
+|------|------|------|------|------|------|
+| 冰蝎 3.0/4.0 | PHP | behinder_3.0_default.php | rebeyond | e45e329feb5d925b | AES-128 |
+| 冰蝎 3.0/4.0 | JSP | behinder_3.0_default.jsp | rebeyond | e45e329feb5d925b | AES-128 |
+| 冰蝎 3.0/4.0 | JSPX | behinder_3.0_default.jspx | rebeyond | e45e329feb5d925b | AES-128 |
+| 冰蝎 3.0/4.0 | ASP | behinder_3.0_default.asp | rebeyond | e45e329feb5d925b | XOR |
+| 冰蝎 3.0/4.0 | ASPX | behinder_3.0_default.aspx | rebeyond | e45e329feb5d925b | AES-128 |
+| 哥斯拉 | PHP | godzilla.php | pass | pass | XOR |
+| 哥斯拉 | JSP | godzilla.jsp | pass | 3c6e0b8a9c15224a | AES-128 |
+| 哥斯拉 | ASPX | godzilla.aspx | pass | 3c6e0b8a9c15224a | AES-128 |
 
-#### Docker 环境
-```bash
-# PHP WebShell
-http://localhost:20000/webshell/behinder_3.0_default.php
+## 访问地址
 
-# JSP WebShell
-http://localhost:20001/webshell/behinder_3.0_default.jsp
+### Docker 环境 (端口 20000-20003)
+```
+PHP:        http://localhost:20000/webshell/
+JSP JDK 8:  http://localhost:20001/webshell/
+JSP JDK 11: http://localhost:20002/webshell/
+JSP JDK 17: http://localhost:20003/webshell/
 ```
 
-#### Vagrant Linux 环境
-```bash
-# PHP WebShell
-http://localhost:20020/webshell/behinder_3.0_default.php
-http://192.168.56.10/webshell/behinder_3.0_default.php
-
-# JSP WebShell
-http://localhost:20021/webshell/behinder_3.0_default.jsp
-http://192.168.56.10:8080/webshell/behinder_3.0_default.jsp
+### Windows 原生环境 (端口 20010-20013)
+```
+PHP:        http://localhost:20010/webshell/
+JSP JDK 8:  http://localhost:20011/webshell/
+JSP JDK 9:  http://localhost:20012/webshell/ (可选)
+JSP JDK 11: http://localhost:20013/webshell/
 ```
 
-#### Vagrant Windows 环境
-```bash
-# ASP WebShell
-http://localhost:20022/webshell/behinder_3.0_default.asp
-http://192.168.56.20/webshell/behinder_3.0_default.asp
+### Docker + 原生可同时运行（端口不冲突）
 
-# ASPX WebShell
-http://localhost:20022/webshell/behinder_3.0_default.aspx
-http://192.168.56.20/webshell/behinder_3.0_default.aspx
+### Vagrant 环境
+```
+Linux Apache PHP:  http://localhost:20020/webshell/
+Linux Tomcat JSP:  http://localhost:20021/webshell/
+Windows IIS ASP:   http://localhost:20022/webshell/
 ```
 
-### 2. 连接工具
+## 连接工具设置
 
-使用 **冰蝎 (Behinder)** 客户端连接：
-- 下载地址：https://github.com/rebeyond/Behinder
-- 默认密码：`rebeyond`
-- 连接URL：上述任意地址
+### 冰蝎 (Behinder) 3.0 / 4.0
+- 下载：https://github.com/rebeyond/Behinder
+- URL：上述任意 `.php` / `.jsp` / `.asp` / `.aspx` 地址
+- 密码：`rebeyond`
+- 冰蝎 4.0 新增功能：自定义请求头、分块传输、内存马管理
 
-### 3. 常见问题
+### 哥斯拉 (Godzilla)
+- 下载：https://github.com/BeichenDream/Godzilla
+- URL：上述 `godzilla.*` 地址
+- 密码：`pass`
+- 密钥：`key`（PHP）或 `3c6e0b8a9c15224a`（JSP/ASPX）
+- 有效载荷：Java / PHP / C#
+- 加密器：JAVA_AES/PHP_XOR/C#_AES
 
-#### Java 版本兼容性
-- **问题**: JSP文件报错 `sun.misc.BASE64Decoder cannot be resolved`
-- **原因**: Java 9+ 移除了 `sun.misc.BASE64Decoder`
-- **解决**: 
-  - 使用 `behinder_3.0_default.jsp`（已更新）
-  - 或使用 `behinder_3.0_default_java9.jsp`
+## 常见问题
 
-#### 权限问题
-```bash
-# Linux 环境
-vagrant ssh linux
-sudo chmod -R 755 /var/www/html/webshell
-sudo chmod -R 755 /opt/tomcat/webapps/ROOT/webshell
+### Java 版本兼容性
+- **问题**: JSP 报错 `sun.misc.BASE64Decoder cannot be resolved`
+- **解决**: 使用 `behinder_3.0_default.jsp`（已更新为标准 Base64 API）
 
-# 重启服务
-sudo systemctl restart apache2
-sudo systemctl restart tomcat
-```
+### 哥斯拉连接失败
+- 确保密钥设置正确：PHP 使用密码本身作为密钥，JSP/ASPX 使用 `3c6e0b8a9c15224a`
+- 哥斯拉 4.0 生成的 webshell 密钥不同，请使用本目录提供的默认版本
 
-#### Windows IIS 配置
-确保IIS启用了ASP和ASP.NET支持：
-```powershell
-# 在Windows虚拟机中
-Enable-WindowsOptionalFeature -Online -FeatureName IIS-ASP
-Enable-WindowsOptionalFeature -Online -FeatureName IIS-ASPNET45
-iisreset
-```
+## 安全警告
 
-## ⚠️ 安全警告
+**这些 WebShell 文件仅用于安全测试和教育目的！**
 
-**这些WebShell文件仅用于安全测试和教育目的！**
-
-- ❌ 不要上传到生产环境
-- ❌ 不要用于非法用途
-- ✅ 仅在受控的测试环境中使用
-- ✅ 测试完成后及时清理
-
-## 技术细节
-
-### Behinder 加密机制
-- 使用AES加密通信
-- 密钥为连接密码的MD5值前16位
-- 默认密码 `rebeyond` → MD5 → `e45e329feb5d925b`
-
-### Base64 编码变更
-```java
-// Java 8 及以前（已废弃）
-sun.misc.BASE64Decoder().decodeBuffer(data)
-
-// Java 8+ 标准API（推荐）
-java.util.Base64.getDecoder().decode(data)
-```
-
-## 参考资料
-
-- Behinder 官方仓库：https://github.com/rebeyond/Behinder
-- WebShell 检测与防护：https://github.com/tennc/webshell
-- OWASP WebShell 防护指南：https://owasp.org/www-community/attacks/Web_Shell
-
+- 不要上传到生产环境
+- 不要用于非法用途
+- 仅在受控的测试环境中使用
+- 测试完成后及时清理

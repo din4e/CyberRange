@@ -1,5 +1,5 @@
 services:
-  # Linux PHP 环境
+  # PHP Apache 环境
   php-apache:
     image: php:8.1-apache
     container_name: cyberrange-php
@@ -10,9 +10,9 @@ services:
       - ./webshell:/var/www/html/webshell
     command: >
       bash -c "
-      echo 'ServerName localhost' >> /etc/apache2/apache2.conf && 
+      echo 'ServerName localhost' >> /etc/apache2/apache2.conf &&
       sed -i 's/Options Indexes FollowSymLinks/Options +Indexes +FollowSymLinks/g' /etc/apache2/apache2.conf &&
-      a2enmod rewrite && 
+      a2enmod rewrite &&
       apache2-foreground"
     networks:
       - cyberrange-network
@@ -26,12 +26,35 @@ services:
           cpus: '0.25'
           memory: 256M
 
-  # Linux Tomcat Java 环境 (支持 JSP/JSPX)
-  tomcat:
-    image: tomcat:9.0-jdk11
-    container_name: cyberrange-tomcat
+  # Tomcat JDK 8 环境 (Java 8 JSP/JSPX)
+  tomcat-jdk8:
+    image: tomcat:9.0-jdk8
+    container_name: cyberrange-tomcat-jdk8
     ports:
       - "20001:8080"
+    volumes:
+      - ./tomcat-webapps/ROOT:/usr/local/tomcat/webapps/ROOT
+      - ./webshell:/usr/local/tomcat/webapps/ROOT/webshell
+    environment:
+      - CATALINA_OPTS=-Xmx512m -Xms256m
+    networks:
+      - cyberrange-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Tomcat JDK 11 环境 (Java 11 JSP/JSPX)
+  tomcat-jdk11:
+    image: tomcat:9.0-jdk11
+    container_name: cyberrange-tomcat-jdk11
+    ports:
+      - "20002:8080"
     volumes:
       - ./tomcat-webapps/ROOT:/usr/local/tomcat/webapps/ROOT
       - ./webshell:/usr/local/tomcat/webapps/ROOT/webshell
@@ -51,7 +74,29 @@ services:
           cpus: '0.5'
           memory: 512M
 
+  # Tomcat JDK 17 环境 (Java 17 JSP/JSPX)
+  tomcat-jdk17:
+    image: tomcat:9.0-jdk17
+    container_name: cyberrange-tomcat-jdk17
+    ports:
+      - "20003:8080"
+    volumes:
+      - ./tomcat-webapps/ROOT:/usr/local/tomcat/webapps/ROOT
+      - ./webshell:/usr/local/tomcat/webapps/ROOT/webshell
+    environment:
+      - CATALINA_OPTS=-Xmx512m -Xms256m
+    networks:
+      - cyberrange-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
 networks:
   cyberrange-network:
     driver: bridge
-

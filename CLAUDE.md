@@ -37,7 +37,12 @@ CyberRange/
 │       ├── .env                 # FLAGS + COMPOSE_PROJECT_NAME
 │       └── cfs-manage.ps1       # 旧版 PowerShell 管理脚本
 ├── webshell-test/               # WebShell 测试靶场 (Docker + Vagrant)
-│   ├── docker-compose.yml       # PHP Apache(:20000) + Tomcat(:20001)
+│   ├── docker-compose.yml       # PHP Apache(:20000) + Tomcat JDK8/11/17
+│   ├── docker-compose.iis.yml   # IIS ASP/ASPX (:20004, Windows 容器)
+│   ├── native/                  # Windows 原生运行 (无需 Docker)
+│   │   ├── setup.ps1            # 下载 PHP + JDK8/11 + Tomcat 并配置
+│   │   ├── start.ps1            # 启动所有服务
+│   │   └── stop.ps1             # 停止所有服务
 │   ├── Vagrantfile              # Linux(Apache+Tomcat) + Windows(IIS) 虚拟机
 │   ├── windows-setup.ps1        # Windows IIS 自动配置脚本
 │   ├── html/                    # PHP 站点根目录
@@ -106,10 +111,23 @@ python -m cyberrange list
 
 ### webshell-test 靶场
 - 位于项目根目录 (非 `<category>/<name>` 格式)，CLI 发现需特殊处理
-- Docker: PHP Apache (`:20000`) + Tomcat (`:20001`)，端口固定不经过端口池分配
-- Vagrant: Linux VM (Ubuntu 20.04, Apache+PHP `:20020`, Tomcat `:20021`) + Windows VM (IIS `:20022`, ASP/ASPX)
-- 支持 PHP/JSP/JSPX/ASP/ASPX 多语言 webshell 测试 (含冰蝎 3.0 默认马)
-- `webshell/` 目录同时挂载到 Apache 和 Tomcat 容器
+- **Docker 模式** (`docker compose up`):
+  - PHP Apache (`:20000`), Tomcat JDK 8 (`:20001`), Tomcat JDK 11 (`:20002`), Tomcat JDK 17 (`:20003`)
+  - ASP/ASPX: 需切换 Windows 容器模式, `docker compose -f docker-compose.iis.yml up --build` (`:20004`)
+- **Windows 原生模式** (`native/setup.ps1` / `start.ps1` / `stop.ps1`):
+  - `setup.ps1` 自动下载 PHP + Adoptium JDK 8/11 + Tomcat 9, 配置多实例
+  - JDK 9 可选: 手动下载 Oracle JDK 9 zip 放入 `native/downloads/jdk9.zip` 后重新 `setup.ps1`
+- **Linux 原生模式** (`native/setup.sh` / `start.sh` / `stop.sh`):
+  - 自动下载 Adoptium JDK 8/11/17 + Tomcat 9, JDK 9 可选
+  - PHP 使用系统安装的版本 (`apt install php`) 或从源码编译
+- **端口分配** (Docker + Native 可同时运行):
+  - Docker: `20000-20003` | Native (Win/Linux): `20010-20014`
+  - Vagrant: `20020-20022`
+- **WebShell 工具支持**:
+  - 冰蝎 (Behinder) 3.0/4.0: PHP/JSP/JSPX/ASP/ASPX, 默认密码 `rebeyond`, AES-128
+  - 哥斯拉 (Godzilla): PHP/JSP/ASPX, 默认密码 `pass`, XOR/AES-128
+  - 冰蝎 4.0 服务端 payload 与 3.0 相同, 客户端新增自定义请求头等功能
+- `webshell/` 目录同时挂载到所有容器/实例
 
 ## 已知问题
 

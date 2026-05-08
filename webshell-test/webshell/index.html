@@ -88,8 +88,13 @@
         <p class="subtitle">多环境 WebShell 文件管理</p>
 
         <div class="env-tabs">
-            <a href="http://localhost:20000/webshell/" class="env-tab" data-port="20000">PHP Apache (:20000)</a>
-            <a href="http://localhost:20001/webshell/" class="env-tab" data-port="20001">Tomcat (:20001)</a>
+            <a href="http://localhost:20000/webshell/" class="env-tab" data-port="20000">Docker PHP</a>
+            <a href="http://localhost:20001/webshell/" class="env-tab" data-port="20001">Docker JDK8</a>
+            <a href="http://localhost:20002/webshell/" class="env-tab" data-port="20002">Docker JDK11</a>
+            <a href="http://localhost:20003/webshell/" class="env-tab" data-port="20003">Docker JDK17</a>
+            <a href="http://localhost:20010/webshell/" class="env-tab" data-port="20010">Native PHP</a>
+            <a href="http://localhost:20011/webshell/" class="env-tab" data-port="20011">Native JDK8</a>
+            <a href="http://localhost:20013/webshell/" class="env-tab" data-port="20013">Native JDK11</a>
         </div>
         <div id="env-badge" class="env-badge">
             当前环境：<strong id="env-name">检测中...</strong>
@@ -101,7 +106,7 @@
         </div>
 
         <div class="info-box">
-            <h3>连接信息 (冰蝎 3.0)</h3>
+            <h3>连接信息 - 冰蝎 (Behinder) 3.0 / 4.0</h3>
             <div class="info-item">
                 <span class="info-label">默认密码</span>
                 <div style="display: flex; gap: 8px; align-items: center;">
@@ -121,19 +126,44 @@
                 <span class="info-value">AES-128</span>
             </div>
             <div class="info-item">
-                <span class="info-label">混淆模式</span>
+                <span class="info-label">兼容版本</span>
+                <span class="info-value">冰蝎 3.0 / 4.0</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">支持文件</span>
+                <span class="info-value">behinder_3.0_default.php / .jsp / .jspx / .asp / .aspx</span>
+            </div>
+            <div style="color: #888; font-size: 0.8em; margin-top: 8px;">
+                密钥 = MD5(密码) 前 16 位 | 冰蝎 4.0 服务端 payload 与 3.0 相同
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>连接信息 - 哥斯拉 (Godzilla)</h3>
+            <div class="info-item">
+                <span class="info-label">默认密码</span>
                 <div style="display: flex; gap: 8px; align-items: center;">
-                    <span class="info-value">默认 (无额外混淆)</span>
+                    <span class="info-value">pass</span>
+                    <button class="btn" onclick="copyText('pass', '密码')">复制</button>
                 </div>
             </div>
             <div class="info-item">
-                <span class="info-label">编码模式</span>
+                <span class="info-label">密钥 (JSP/ASPX)</span>
                 <div style="display: flex; gap: 8px; align-items: center;">
-                    <span class="info-value">UTF-8</span>
+                    <span class="info-value">3c6e0b8a9c15224a</span>
+                    <button class="btn" onclick="copyText('3c6e0b8a9c15224a', '密钥')">复制</button>
                 </div>
             </div>
+            <div class="info-item">
+                <span class="info-label">加密方式</span>
+                <span class="info-value">PHP: XOR | JSP/ASPX: AES-128</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">支持文件</span>
+                <span class="info-value">godzilla.php / .jsp / .aspx</span>
+            </div>
             <div style="color: #888; font-size: 0.8em; margin-top: 8px;">
-                密钥 = MD5(密码) 取前 16 位 | ASP/ASPX 环境编码建议使用 GBK
+                PHP 密钥 = 密码本身 | JSP/ASPX 密钥 = MD5(pass) 前 16 位
             </div>
         </div>
 
@@ -154,16 +184,22 @@
 
     <script>
         const ENV_MAP = {
-            '20000': { name: 'PHP Apache (:20000)', api: 'api.php', exts: ['php'] },
-            '20001': { name: 'Tomcat (:20001)', api: 'api.jsp', exts: ['jsp', 'jspx'] }
+            '20000': { name: 'Docker PHP (:20000)', api: 'api.php', exts: ['php'] },
+            '20001': { name: 'Docker JDK8 (:20001)', api: 'api.jsp', exts: ['jsp', 'jspx'] },
+            '20002': { name: 'Docker JDK11 (:20002)', api: 'api.jsp', exts: ['jsp', 'jspx'] },
+            '20003': { name: 'Docker JDK17 (:20003)', api: 'api.jsp', exts: ['jsp', 'jspx'] },
+            '20010': { name: 'Native PHP (:20010)', api: 'api.php', exts: ['php'] },
+            '20011': { name: 'Native JDK8 (:20011)', api: 'api.jsp', exts: ['jsp', 'jspx'] },
+            '20012': { name: 'Native JDK9 (:20012)', api: 'api.jsp', exts: ['jsp', 'jspx'] },
+            '20013': { name: 'Native JDK11 (:20013)', api: 'api.jsp', exts: ['jsp', 'jspx'] }
         };
         const TYPE_LABELS = {
             php: 'PHP WebShell', jsp: 'JSP WebShell', jspx: 'JSPX WebShell',
             asp: 'ASP WebShell', aspx: 'ASPX WebShell'
         };
         const ENV_FOR_EXT = {
-            php: 'PHP Apache (:20000)', jsp: 'Tomcat (:20001)', jspx: 'Tomcat (:20001)',
-            asp: 'IIS / Windows (:20022)', aspx: 'IIS / Windows (:20022)'
+            php: 'PHP 环境', jsp: 'Tomcat 环境', jspx: 'Tomcat 环境',
+            asp: 'IIS / Windows', aspx: 'IIS / Windows'
         };
 
         const port = window.location.port;
@@ -233,8 +269,11 @@
             const typeLabel = TYPE_LABELS[ext] || ext.toUpperCase();
             const envLabel = ENV_FOR_EXT[ext] || '';
             const isBehinder = f.name.toLowerCase().includes('behinder');
+            const isGodzilla = f.name.toLowerCase().includes('godzilla');
             const desc = isBehinder
-                ? typeLabel + ' - Behinder 3.0 默认密钥 (rebeyond)'
+                ? typeLabel + ' - 冰蝎 3.0/4.0 (密码: rebeyond)'
+                : isGodzilla
+                ? typeLabel + ' - 哥斯拉 (密码: pass)'
                 : typeLabel;
 
             return '<li class="file-item">' +
